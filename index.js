@@ -158,25 +158,25 @@ async function fetchAndCalculateSupertrend() {
 //To get trend now
 function getTrendByBot() {
   // Respond to messages with "/nowtrend" command
-  bot.on('text', (ctx) => {
+  bot.on('text', async (ctx) => {
     if (ctx.message.text.includes('/nowtrend')) {
       const symbol = ctx.message.text.split(' ')[1];
       if (symbol) {
-        // const timeframe = '15m';
-        // const limit = 100;
-        // const atrLength = 10;
-        // const multiplier = 3;
-        // const data = await fetchOHLCV(symbol, timeframe, limit);
-        // const superTrend = calculateSupertrend(data, atrLength, multiplier);
-        // const latest = superTrend[superTrend.length - 1];
-        // const message = `${
-        //   latest.direction == 'BUY' ? '🟢' : '🔴'
-        // }#${symbol.replace('/', '')}\nRECOMMENDATION: ${
-        //   latest.direction == 'BUY' ? 'BUY 🟢' : 'SELL 🔴'
-        // }\nEntry: ${latest.close.toFixed(2)}\nSL: ${latest.supertrend.toFixed(
-        //   2
-        // )}⛔`;
-        // ctx.reply(message);
+        const timeframe = '15m';
+        const limit = 100;
+        const atrLength = 10;
+        const multiplier = 3;
+        const data = await fetchOHLCV(symbol, timeframe, limit);
+        const superTrend = calculateSupertrend(data, atrLength, multiplier);
+        const latest = superTrend[superTrend.length - 1];
+        const message = `${
+          latest.direction == 'BUY' ? '🟢' : '🔴'
+        }#${symbol.replace('/', '')}\nRECOMMENDATION: ${
+          latest.direction == 'BUY' ? 'BUY 🟢' : 'SELL 🔴'
+        }\nEntry: ${latest.close.toFixed(2)}\nSL: ${latest.supertrend.toFixed(
+          2
+        )}⛔`;
+        ctx.reply(message);
       } else {
         ctx.reply('Wrong command!! Exam: /nowtrend BTC/USDT');
       }
