@@ -134,9 +134,11 @@ async function fetchAndCalculateSupertrend() {
       await bot.telegram.sendMessage(chatId, message);
     }  
   });  
+  console.log("On Running");
 }  
 //To get trend now
 function getTrendByBot() {
+  console.log("On Running BOT");
   // Respond to messages with "/nowtrend" command  
   bot.on('text', async (ctx) => {
     if (ctx.message.text.includes('/nowtrend')) {
