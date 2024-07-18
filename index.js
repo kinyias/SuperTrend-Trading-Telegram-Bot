@@ -118,13 +118,11 @@ async function fetchAndCalculateSupertrend() {
   const multiplier = 3;
   for(let i=0;i< symbols.length;i++){
     const data = await fetchOHLCV(symbols[i], timeframe, limit);
-    console.log(symbols[i]);
-    console.log(data);
     const superTrend = calculateSupertrend(data, atrLength, multiplier);
     const nearLasest = superTrend[superTrend.length - 2];
     const latest = superTrend[superTrend.length - 1];
     //To notifi when revert trend
-    // if (nearLasest.direction != latest.direction) {
+    if (nearLasest.direction != latest.direction) {
     const message = `${
       latest.direction == 'BUY' ? '🟢' : '🔴'
     }#${symbols[i].replace('/', '')}\nRECOMMENDATION: ${
@@ -133,27 +131,9 @@ async function fetchAndCalculateSupertrend() {
       2
     )}⛔`;
     await bot.telegram.sendMessage(chatId, message);
-    // }
+    }
   }
-  // symbols.forEach(async (symbol) => {
-  //   const data = await fetchOHLCV(symbol, timeframe, limit);
-  //   console.log(symbol);
-  //   const superTrend = calculateSupertrend(data, atrLength, multiplier);
-  //   const nearLasest = superTrend[superTrend.length - 2];
-  //   const latest = superTrend[superTrend.length - 1];
-  //   //To notifi when revert trend
-  //   // if (nearLasest.direction != latest.direction) {
-  //   const message = `${
-  //     latest.direction == 'BUY' ? '🟢' : '🔴'
-  //   }#${symbol.replace('/', '')}\nRECOMMENDATION: ${
-  //     latest.direction == 'BUY' ? 'BUY 🟢' : 'SELL 🔴'
-  //   }\nEntry: ${latest.close.toFixed(2)}\nSL: ${latest.supertrend.toFixed(
-  //     2
-  //   )}⛔`;
-  //   console.log(message);
-  //   await bot.telegram.sendMessage(chatId, message);
-  //   // }
-  // });
+  console.log("On Running...");
 }
 //To get trend now
 function getTrendByBot() {
