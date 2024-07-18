@@ -1,8 +1,10 @@
 {
   "type": "module",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "ccxt": "^4.3.62",
     "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "moment-timezone": "^0.5.45",
     "telegraf": "^4.16.3"
   }
