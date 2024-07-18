@@ -140,7 +140,7 @@ function getTrendByBot() {
   // Respond to messages with "/nowtrend" command
   bot.on('text', async (ctx) => {
     if (ctx.message.text.includes('/nowtrend')) {
-      const symbol = ctx.message.text.split(' ')[1];
+      const symbol = ctx.message.text.split(' ')[1].toUpperCase();
       if (symbol) {
         const timeframe = '15m';
         const limit = 100;
