@@ -15,10 +15,10 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
-  const symbol = req.query.symbol;
-  const timeframe = req.query.timeframe;
-  const atrLength = req.query.atrLength;
-  const multiplier = req.query.multiplier;
+  const symbol = req.query.symbol.toUpperCase() || 'BTC/USDT';
+  const timeframe = req.query.timeframe || '15m';
+  const atrLength = parseInt(req.query.atrLength) || 1;
+  const multiplier = parseInt(req.query.multiplier) || 3;
   await fetchAndCalculateSupertrend(symbol, timeframe,atrLength,multiplier);
   res.json({ success: true, message: 'Telegram  Bot' });
 });
@@ -116,7 +116,7 @@ const calculateSupertrend = (df, atrLength, multiplier) => {
 // Function to fetch data and calculate Supertrend
 async function fetchAndCalculateSupertrend(symbol, timeframe, atrLength,multiplier) {
   const limit = 100;
-  const data = await fetchOHLCV(symbol.toUpperCase(), timeframe, limit);
+  const data = await fetchOHLCV(symbol, timeframe, limit);
   const superTrend = calculateSupertrend(data, atrLength, multiplier);
   const nearLasest = superTrend[superTrend.length - 2];
   const latest = superTrend[superTrend.length - 1];
