@@ -15,7 +15,11 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
-  await fetchAndCalculateSupertrend();
+  const symbol = req.query.symbol.toUpperCase();
+  const timeframe = req.query.timeframe;
+  const atrLength = req.query.atrLength;
+  const multiplier = req.query.multiplier;
+  await fetchAndCalculateSupertrend(symbol, timeframe,atrLength,multiplier);
   res.json({ success: true, message: 'Telegram  Bot' });
 });
 
@@ -110,36 +114,30 @@ const calculateSupertrend = (df, atrLength, multiplier) => {
 };
 
 // Function to fetch data and calculate Supertrend
-async function fetchAndCalculateSupertrend() {
-  const symbols = ['BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'ICP/USDT'];
-  const timeframe = '15m';
+async function fetchAndCalculateSupertrend(symbol, timeframe, atrLength,multiplier) {
   const limit = 100;
-  const atrLength = 10;
-  const multiplier = 3;
-  for(let i=0;i< symbols.length;i++){
-    const data = await fetchOHLCV(symbols[i], timeframe, limit);
-    const superTrend = calculateSupertrend(data, atrLength, multiplier);
-    const nearLasest = superTrend[superTrend.length - 2];
-    const latest = superTrend[superTrend.length - 1];
-    //To notifi when revert trend
-    if (nearLasest.direction != latest.direction) {
+  const data = await fetchOHLCV(symbol, timeframe, limit);
+  const superTrend = calculateSupertrend(data, atrLength, multiplier);
+  const nearLasest = superTrend[superTrend.length - 2];
+  const latest = superTrend[superTrend.length - 1];
+  //To notifi when revert trend
+  if (nearLasest.direction != latest.direction) {
     const message = `${
       latest.direction == 'BUY' ? '🟢' : '🔴'
-    }#${symbols[i].replace('/', '')}\nRECOMMENDATION: ${
+    }#${symbol.replace('/', '')}\nRECOMMENDATION: ${
       latest.direction == 'BUY' ? 'BUY 🟢' : 'SELL 🔴'
     }\nEntry: ${latest.close.toFixed(2)}\nSL: ${latest.supertrend.toFixed(
       2
     )}⛔`;
     await bot.telegram.sendMessage(chatId, message);
-    }
   }
-  console.log("On Running...");
+  console.log('On Running...');
 }
 //To get trend now
 function getTrendByBot() {
-  // Respond to messages with "/nowtrend" command
+  // Respond to messages with "/now" command
   bot.on('text', async (ctx) => {
-    if (ctx.message.text.includes('/nowtrend')) {
+    if (ctx.message.text.includes('/now')) {
       const symbol = ctx.message.text.split(' ')[1].toUpperCase();
       if (symbol) {
         const timeframe = '15m';
@@ -158,7 +156,7 @@ function getTrendByBot() {
         )}⛔`;
         ctx.reply(message);
       } else {
-        ctx.reply('Wrong command!! Exam: /nowtrend BTC/USDT');
+        ctx.reply('Wrong command!! Exam: /now BTC/USDT');
       }
     }
   });
