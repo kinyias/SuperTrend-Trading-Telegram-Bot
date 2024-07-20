@@ -19,7 +19,7 @@ app.get('/', async (req, res) => {
   const timeframe = req.query?.timeframe || '15m';
   const atrLength = parseInt(req.query?.atrLength) || 1;
   const multiplier = parseInt(req.query?.multiplier) || 3;
-  await fetchAndCalculateSupertrend(symbol, timeframe,atrLength,multiplier);
+  await fetchAndCalculateSupertrend(symbol, timeframe, atrLength, multiplier);
   res.json({ success: true, message: 'Telegram  Bot' });
 });
 
@@ -114,21 +114,18 @@ const calculateSupertrend = (df, atrLength, multiplier) => {
 };
 
 // Function to fetch data and calculate Supertrend
-async function fetchAndCalculateSupertrend(symbol, timeframe, atrLength,multiplier) {
+async function fetchAndCalculateSupertrend(
+  symbol,
+  timeframe,
+  atrLength,
+  multiplier
+) {
   const limit = 100;
   const data = await fetchOHLCV(symbol, timeframe, limit);
   const superTrend = calculateSupertrend(data, atrLength, multiplier);
   const nearLasest = superTrend[superTrend.length - 2];
   const latest = superTrend[superTrend.length - 1];
   //To notifi when revert trend
-  const message = `${
-    latest.direction == 'BUY' ? '🟢' : '🔴'
-  }#${symbol.replace('/', '')}\nRECOMMENDATION: ${
-    latest.direction == 'BUY' ? 'BUY 🟢' : 'SELL 🔴'
-  }\nEntry: ${latest.close.toFixed(2)}\nSL: ${latest.supertrend.toFixed(
-    2
-  )}⛔`;
-  await bot.telegram.sendMessage(chatId, message);
   if (nearLasest.direction != latest.direction) {
     const message = `${
       latest.direction == 'BUY' ? '🟢' : '🔴'
