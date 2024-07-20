@@ -121,6 +121,14 @@ async function fetchAndCalculateSupertrend(symbol, timeframe, atrLength,multipli
   const nearLasest = superTrend[superTrend.length - 2];
   const latest = superTrend[superTrend.length - 1];
   //To notifi when revert trend
+  const message = `${
+    latest.direction == 'BUY' ? '🟢' : '🔴'
+  }#${symbol.replace('/', '')}\nRECOMMENDATION: ${
+    latest.direction == 'BUY' ? 'BUY 🟢' : 'SELL 🔴'
+  }\nEntry: ${latest.close.toFixed(2)}\nSL: ${latest.supertrend.toFixed(
+    2
+  )}⛔`;
+  await bot.telegram.sendMessage(chatId, message);
   if (nearLasest.direction != latest.direction) {
     const message = `${
       latest.direction == 'BUY' ? '🟢' : '🔴'
