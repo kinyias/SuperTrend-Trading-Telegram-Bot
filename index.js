@@ -15,10 +15,10 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
-  const symbol = req.query.symbol.toUpperCase() || 'BTC/USDT';
-  const timeframe = req.query.timeframe || '15m';
-  const atrLength = parseInt(req.query.atrLength) || 1;
-  const multiplier = parseInt(req.query.multiplier) || 3;
+  const symbol = req.query?.symbol?.toUpperCase() || 'BTC/USDT';
+  const timeframe = req.query?.timeframe || '15m';
+  const atrLength = parseInt(req.query?.atrLength) || 1;
+  const multiplier = parseInt(req.query?.multiplier) || 3;
   await fetchAndCalculateSupertrend(symbol, timeframe,atrLength,multiplier);
   res.json({ success: true, message: 'Telegram  Bot' });
 });
