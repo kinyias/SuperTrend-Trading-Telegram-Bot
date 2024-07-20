@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
-  const symbol = req.query.symbol.toUpperCase();
+  const symbol = req.query.symbol;
   const timeframe = req.query.timeframe;
   const atrLength = req.query.atrLength;
   const multiplier = req.query.multiplier;
@@ -116,7 +116,7 @@ const calculateSupertrend = (df, atrLength, multiplier) => {
 // Function to fetch data and calculate Supertrend
 async function fetchAndCalculateSupertrend(symbol, timeframe, atrLength,multiplier) {
   const limit = 100;
-  const data = await fetchOHLCV(symbol, timeframe, limit);
+  const data = await fetchOHLCV(symbol.toUpperCase(), timeframe, limit);
   const superTrend = calculateSupertrend(data, atrLength, multiplier);
   const nearLasest = superTrend[superTrend.length - 2];
   const latest = superTrend[superTrend.length - 1];
